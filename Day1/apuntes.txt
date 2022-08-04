@@ -1,0 +1,8 @@
+skywater_pdks: all pdks files, time, lef files, information files, tech lef, cell lef
+open_pdks: make compitble the files to the foundries,(magic, netgen,...)
+sky130A: .ref timing, information of the technology/ .tech information for the tools(klayout, magic,...)
+
+
+default values openlane, then config.tcl, then sky130.....hd.....
+
+prep: making files and folders needed for save the files 
