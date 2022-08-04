@@ -95,6 +95,20 @@ We go to the synthesis folder to see the generated reports.
 
 ![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day1/reports_synthesis.png)
 
-For this lab we will see the statistics report, in order to know the number of flip-flop and get the flip-flpo rate.
+For this lab we will see the statistics report, in order to know the number of flip-flop and get the flop rate.
  
  $$ FR = \frac{No\ flip\ flop}{No\ cells} $$
+ 
+ ![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day1/reports_synthesis_statistics_1.png)
+ ![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day1/reports_synthesis_statistics_2.png)
+ ![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day1/reports_synthesis_statistics_3.png)
+ 
+ From this report we can get the FR, and the total chip area of the module.
+ 
+ No of flip-flop = 1613
+ 
+ No of cells = 14876
+ 
+ FR = 0.10843
+ 
+ Chip area = 147712.9184
