@@ -56,7 +56,7 @@ This file has same information than the config.tcl, however this one is more rel
 
 ![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day1/Open_sky130_hd_tcl.png)
 
-## Starting openlane flow
+## Starting openlane
 
 For starting openlane we open a new terminal window and run docker. In the docker's bash, we start openlane interactively, and in the openlane's bash we prepare for runing the flow.
 
@@ -86,3 +86,15 @@ Once we are ready, we run the synthesis. This will take no more than 5 minutes.
 > run_synthesis
 
 ![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day1/synthesis_done.png)
+
+When synthesis is completed there will appear some reports inside the runs folder that was already mention.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day1/reports.png?raw=true)
+
+We go to the synthesis folder to see the generated reports.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day1/reports_synthesis.png)
+
+For this lab we will see the statistics report, in order to know the number of flip-flop and get the flip-flpo rate.
+ 
+ $$ FR = \frac{No\ flip\ flop}{No\ cells} $$
