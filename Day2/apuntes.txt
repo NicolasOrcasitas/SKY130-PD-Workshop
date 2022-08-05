@@ -1,0 +1,41 @@
+run_floorplan
+
+***vertical/horizontal metal ***
+
+die area in um
+
+magic -T ~/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.floorplan.def &
+
+Place and route
+
+1) bind netlist with physical cells (squares width and heigh)
+2) placement
+3) optimize placement (wire length and capacitance calculations) add buffers for long distances
+
+
+////////////////////////
+part 1. logic synthesis export netlist
+part 2. floorplan import netlist, decide size for the core an die (depend number of cells)
+part 3. placement (place cell in the chip, nearest to conection outputs or inputs)
+part 4. clock tree synthesis (0 skew, take care of the clock signal
+part 5. routing
+part 6. static timing analysis (hold and setup violation)
+
+for all above need libraries
+
+//////////////////
+run_placement (take time)
+
+magic -T ~/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.placement.def &
+
+
+/////////////////////
+library has std_cells 
+(gates, with different sizes, thresgold voltage and functionality, information in the library)
+
+ cell design flow
+-inputs, design steps, outputs
+	inputs: rules form de foundry -> pdks: drc lvs, spice (capacitances, vto, gamma, ...), specification 
+(heigh, suply voltage, metal layers)
+ 	design steps: circuit design (spice simulation), layout design (eulers path and stick diagram->layout), characterization (timing, noise, an power)
+	outputs: spice netlist (resistances, capacitances) timing, noise, power libs
