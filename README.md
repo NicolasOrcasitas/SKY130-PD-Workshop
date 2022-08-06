@@ -3,7 +3,7 @@ Here there are all the material and labs made in the SKY130 PD Workshop.
 
 ## Table of Contents
 
-[Day 1](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/edit/main/README.md#day-1-inception-of-open-source-eda-openlane-and-sky130-pdk)
+[Day 1](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-1-inception-of-open-source-eda-openlane-and-sky130-pdk)
 
 [Day 2](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-2-good-floorplan-vs-bad-floorplan-and-introduction-to-library-cells)
 
