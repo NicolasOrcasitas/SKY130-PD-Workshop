@@ -239,4 +239,87 @@ $$Delay\ time\ =\ out\ th\ -\ in\ th$$
 $$Transition\ time\ =\ high\ th\ -\ low\ th$$
 
 
+# Day 3: Design library cell using Magic Layout and ngspice characterization
+
+## CMOS inverter standard cell
+
+We are not going to design the inverter layout, so we get from the next git hub repository (https://github.com/nickson-jose/vsdstdcelldesign) by nickson-jose.
+
+To copy this repo to our machine, we go to the openlane folder.
+
+> /home/niorcasitas07/Desktop/work/tools/openlane_working_dir/openlane
+
+For cloning the repository.
+
+> git clone https://github.com/nickson-jose/vsdstdcelldesign
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day3/clonning_github_repo.png)
+
+Then we copy the sky130A.tech file inside the folder of the repository, in order to have it in the same folder at the moment of opening magic.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day3/coping_sky130a.png)
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day3/sky130a_inside_cloned_repo.png)
+
+We have all ready for see the inverter layout in magic. To open magic we execute the next command.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day3/opening_magic.png)
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day3/inv_magic_open.png)
+
+We can verify that this layout correspond to an inverter layout with the help of magic. Using the command "what" we can check that the upper transistor is a pmos and the lower one is a nmos. In adition all the conections are correctly done, both drains are conected to the output, both gates to the input, the pmos source is conected to VDD, and the nmos source is conected to VSS.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day3/ptransistor_magic.png)
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day3/ntransistor_magic.png)
+
+When we have the layout completed without any drc violations. We proceed to extrac an spice file from the layout, to simulate this cell with ngspice and characterize it.
+
+## Extracting spcie netlist from layout
+
+For extrac the spice file we run the next commands in the magic console.
+
+> extract all
+
+> ext2spice cthresh 0 rthresh 0
+
+> ext2spice
+
+This will create two files with the extensions .ext and .spice
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day3/spice_file.png)
+
+Inside the spice document there is the netlist extracted from the layout with parasitics.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day3/text_in_spice_file.png)
+
+## Simulation using ngspice
+
+For running a simulation its necesary to add the simulation profile, the voltage sources as VDD and vin, and the libraries for the transistors. So we edit the .spice file.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day3/spice_file_edited.png)
+
+For runing the simulation with ngspice we run the next command.
+
+> ngspice sky130_inv.spice
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day3/run_ngspice_file.png)
+
+The simulation is completed but to see a graphic with the input and output wave we have to run the next command in the ngspice bash.
+
+> plot y vs time a
+
+And we get the plot.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day3/plot_y_vs_time.png)
+
+For getting the timing characterization, we use the graphic and the ngspcice bash to get the needed values.
+
+| Timing values | Times |
+| ------------- | ------------- |
+| rise time  | 63.71 ps |
+| fall time  | 42.56 ps |
+| rise delay | 60.83 ps |
+| fall delay | 27.58 ps |
+
+
 
