@@ -170,7 +170,7 @@ When the floorplan is done, the results can be checked in the next folder in the
 
 In the results we can observe the area of the die in microns.
 
-$$DIAREA (660.685\mu m 671.405\mu m)$$ 
+$$DIEAREA (660.685\mu m 671.405\mu m)$$ 
 
 $$Total area = 443587.21 \mu m^2$$
 
