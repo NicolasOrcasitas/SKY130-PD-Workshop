@@ -1,0 +1,62 @@
+make changes on the fly
+////////////////////////
+spice deck
+	-component connectivity
+	-component values 0.35u/0.25u
+	-identify nodes
+	-name nodes
+
+*Transistors
+M1 out in vdd vdd pmos W=0.375u L=0.025u
+M2 out in 0 0 nmos W=0.375u L=0.025u
+
+*Capacitors
+cload out 0 10f
+
+*Sources
+Vdd vdd 0 2.5
+Vin in 0 2.5
+
+*Simulations
+.op
+.dc Vin 0 2.5 0.05
+
+*Include model
+.LIB "tsmc_025um_model.mod" CMOS_MODELS
+.end
+
+/////////////////
+Static bahavior: CMOS robustness
+	-switching threshold Vin = Vout, Vm
+
+///////////////////
+Layout layers
+	
+	-substrate (ptype silicon)
+	-active region
+	-nwell and pwell
+	-formation gate
+	-ligthly doped drain
+	-source and drain
+	-contacts and interconect
+	-higher level metal
+////////////////////
+edit spice extract
+
+scale = 0.01u
+.include ./libs/pshort.lib
+.include ./libs/nshort.lib
+voltage sources
+simulation
+
+///////////////
+ngspice file_name
+
+plot y vs time a
+calculate: 20% = 0.66 ----- 80%=2.64
+transition time 80-20
+rise time = 2.24569 ns - 2.18198 ns = 63.71 ps
+fall time = 4.09513 ns - 4.05257ns = 42.56 ps
+propagation delay (rise delay/fall delay)
+rise dealy = 2.21089 ns - 2.15006 ns = 60.83 ps
+fall delay = 4.0776 ns - 4.05002 ns = 27.58 ps
