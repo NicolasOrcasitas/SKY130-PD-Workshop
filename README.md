@@ -7,6 +7,8 @@ Here there are all the material and labs made in the SKY130 PD Workshop.
 
 [Day 2](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-2-good-floorplan-vs-bad-floorplan-and-introduction-to-library-cells)
 
+[Day 3](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-3-design-library-cell-using-magic-layout-and-ngspice-characterization)
+
 <a name="Day 1"></a>
 # Day 1: Inception of open-source EDA, OpenLANE and SKY130 PDK
 
