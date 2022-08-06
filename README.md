@@ -1,6 +1,13 @@
 # SKY130-PD-Workshop
 Here there are all the material and labs made in the SKY130 PD Workshop.
 
+## Table of Contents
+
+[Day 1](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/edit/main/README.md#day-1-inception-of-open-source-eda-openlane-and-sky130-pdk)
+
+[Day 2](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/edit/main/README.md#day-2-good-floorplan-vs-bad-floorplan-and-introduction-to-library-cells)
+
+<a name="Day 1"></a>
 # Day 1: Inception of open-source EDA, OpenLANE and SKY130 PDK
 
 ## Getting to know OpenLane directory
@@ -112,3 +119,124 @@ For this lab we will see the statistics report, in order to know the number of f
  FR = 0.10843
  
  Chip area = 147712.9184
+
+
+# Day 2: Good floorplan vs bad floorplan and introduction to library cells
+
+## Floor planing
+
+This step of the openlane flow places all the standard cells, logical gates, and pins on the silicon chip. Also make sure that each module is located in a good way, taking into acount their dimentions giving a minimum space for each module, the netlist to put them as nearest as possible to their conections minimizing the length of the path from the pin to the module or between modules, and always try to use the minimum chip area as posible.
+
+In order to have a good floorplan is recomendable to follow this steps:
+
+1. **Define width and heigh of the core and die**: setting good dimentions for the core and die is important, becasuse more area its more expensive, however if we set small dimentions it won't be space for a good module placing. There are two measurements that should be also specify.
+$$Utilization\ factor\ =\ \frac{Area\ ocupied\ by\ netlist}{Total\ area\ of\ the\ core}$$
+$$Aspect\ ratio\ =\ \frac{Height}{Width}$$
+
+2. **Define locations of preplaced cells**:  The preplaced cells are cells that are instanced just once, and they can be use multiple times. Some preplaced cells are memory, clock gating, mux and comparator. These cells are placed manually by the user before the automated place of the cells, this automatic placing algorithm will use the remaining space for placing the other cells.
+
+3. **Surround pre-placed cells with decopuling capcitor**:  The decopubling capacitors are between VDD and VSS and they are placed near to the preplaced cells because they are used to stabilize the supply voltage for the preplaced cells when there is a transition from 1 to 0 or 0 to 1. Whithout the decoupling capacitors when there is a transition the VDD voltage decreases because of the amount of require charge.
+
+4. **Power planning**: Here there are made a number of vertical and horizontal VDD and VSS routes for getting closer the suply voltages to each cells.
+
+5. **Pin palcement**: The pins should be placed in a good way in order to have the inputs and outputs pins of somo module near.
+
+## FIles used for floorplan
+
+Inside the work/tools/openlane_working_dir/openlane/configuration folder there is a README file that contains all the variables with an explanation that can be used to edit the floorplan stage depending on what the designer wants to do.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day2/fp_variables_1.png)
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day2/fp_variables_2.png)
+
+In the same folder there is a .tcl file that contains the default values for the floorplan.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day2/default_fp_param.png)
+
+These parameters can be modified in  work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/04-08_14-15/config.tcl file and the parameter will be overwrited
+However the more priority file is the config.tcl located in the project folder.
+
+## Running floorplan 
+For running floorplan the next command must be executed in the openlane folder.
+
+> run_floorplan
+
+When the floorplan is done, the results can be checked in the next folder in the .def file.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day2/runs_results_fp.png)
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day2/picorv32a_fp_def.png)
+
+In the results we can observe the area of the die in microns.
+
+$$DIAREA (660.685\mu m 671.405\mu m)$$ 
+
+$$Total area = 443587.21 \mu m^2$$
+
+To visualized the floorplan we can open magic:
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day2/magic_view_fp.png)
+
+
+And we will see this layout
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day2/magic_view_fp_layout.png)
+
+## Running placement
+
+This stage consist in three steps:
+
+1. **Binding netlist with physical cells**: Here it binds each module of the netlist with a physical cell that have a height and a width
+
+2. **Placement**: Here the physical binded cells are placed on the core in an optimal way in order to minimize the length of the connections between modules.
+
+3.**Optimize placement**: Here th tool calculates the length of the requiered wires and capacitances associated to it, and for long wires buffers are added as repeaters to mantain the value of the signal.
+
+For run placement the next command must be executed.
+
+> run_placement
+
+To visualize the placement we can open magic.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day2/magic_view_placement.png)
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day2/magic_view_placement_layout.png)
+
+We can zoom in to see the placed cells
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day2/magic_view_placement_cells_zoom.png)
+
+
+## Library cells
+
+The library cells contains all the information needed for each step of the flow like dimentions and timing information. These are needed to check the results of each step, for example  in the floorplan the size of the core is decided depending on the number of cells and the dimentions of each one, for timing analisys it takes the timing inforation from the libraries and check setup and hold violations.
+
+Inside these library cells there many standard cells with different characteristics, like sizes, threshhold voltages and gates. The designing standard cell flow is the next one:
+
+1. **Inputs**: The inputs that are needed are the pdks that conatin the rules and specifications stablish by the foundry.
+2. **Design steps** : Spice is used for simulated the circuit and also the layout is designed.
+3. **Outputs**: The outputs are the spice netlist with capacitances and resistances and the timing, noise and power libs.
+
+## Time characterization 
+
+For timing characterization some concepts must be defined.
+
+| Timing threshhold definitions | Percentage |
+| ------------- | ------------- |
+| low rise th  | 20% |
+| high rise th  | 80% |
+| low fall th   | 20% |
+| high fall th  | 80%     |
+| in rise th    |     50%     |
+| out rise th   |     50%     |
+| in fall th    |     50%     |
+| out fall th   |     50%     |
+
+
+The values that are used to characterize a cell are.
+
+$$Delay\ time\ =\ out\ th\ -\ in\ th$$
+
+$$Transition\ time\ =\ high\ th\ -\ low\ th$$
+
+
+
