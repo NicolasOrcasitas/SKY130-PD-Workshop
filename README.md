@@ -9,6 +9,8 @@ Here there are all the material and labs made in the SKY130 PD Workshop.
 
 [Day 3](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-3-design-library-cell-using-magic-layout-and-ngspice-characterization)
 
+[Day 4]()
+
 <a name="Day 1"></a>
 # Day 1: Inception of open-source EDA, OpenLANE and SKY130 PDK
 
@@ -322,6 +324,91 @@ For getting the timing characterization, we use the graphic and the ngspcice bas
 | fall time  | 42.56 ps |
 | rise delay | 60.83 ps |
 | fall delay | 27.58 ps |
+
+
+# Day 4: Pre-layout timing analysis and importance of good clock tree
+
+## Extracting -lef file
+ To get our .lef file from our standard inverter cell layout, first we have to check some paramaters of the dimentions of the cell and the placing of the pins. This will depend on the minimum width (pitch) of the layers (metal 1, metal 2, etc..). We can see this parameters in the next directory:
+ 
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day4/directory_tracks_information.png)
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day4/track_info.png)
+
+
+Follow the next recomendation:
+
+- The width of the standard cell must be an odd multiple of the vertical metal pitch.
+- The heigh of the cell must be such that the VDD and VSS pins match with the power distribution donde in the floorplan
+- The input and output pins must be in some interception of the grid.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day4/set_grid.png)
+
+Once we have completed all the requirements we can get the .lef file. For this we will write the next command in the magic console.
+
+> lef write
+
+This will create a .lef file with the same name of the magic file, and in the same directory.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day4/lef_write.png)
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day4/lef_file_generated.png)
+
+Inside the .lef file there are the pins and cell dimentions, that are use at the placement stage.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day4/open_lef_file.png)
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day4/open_lef_file_2.png)
+
+
+## Adding our cell to the flow
+
+To have our cell inside the openlane flow we have to copy the .lef file into the src folder inside the picorv32a design.
+
+> cp sky130_vsdinv.lef /home/niorcasitas07/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/src
+
+And we have also to cpoy the .lib files that are inside the cloned repository.
+
+> cp sky130_fd_sc_hd_* /home/niorcasitas07/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/src
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day4/lib_copied.png)
+
+To add the .lef file, we have to modify the config.tcl file inside picorv32a folder, adding the next variables.
+
+> set ::env(LIB_SYNTH) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__typical.lib"
+>
+> set ::env(LIB_FASTEST) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__fast.lib"
+>
+> set ::env(LIB_SLOWEST) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__slow.lib"
+>
+> set ::env(LIB_TYPICAL) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__typical.lib"
+>
+> set ::env(EXTRA_LEFS) [glob $::env(OPENLANE_ROOT)/designs/$::env(DESIGN_NAME)/src/*.lef]
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day4/config_tcl_modified.png)
+
+We run openlane as we have done before but with the next extra stpes.
+
+> set lefs [glob $::env(DESIGN_DIR)/src/*.lef]
+> 
+> add_lefs -src $lefs
+
+And then we run synthesis, floorplan and placement. This will generate a .lef and .def file. We can visualizae the layout with magic.
+
+> magic -T /home/niorcasitas07/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.placement.def &
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day4/magic_placement.png)
+
+If we zoom in we would see our cell implemented in the placement.
+
+![](![magic_placement_expand](https://user-images.githubusercontent.com/68023564/183274041-9e31b8df-576b-49f6-b4c3-f0f45a71c765.png)
+
+
+## Timing analysis
+
+
+
+
 
 
 
