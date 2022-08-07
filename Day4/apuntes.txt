@@ -1,0 +1,114 @@
+.lef file contain dimentions and pins
+
+grid 0.46um 0.34um 0.23um 0.17um (grid magic)
+
+width odd multiple of a pitch
+heigh vdd and vss fit with power distribution
+input output cross between vertical and horizontal grid
+
+ 
+
+/////////////////////////////
+generate lef file
+
+	% lef write
+
+copy lef file
+cp sky130_vsdinv.lef /home/niorcasitas07/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/src
+
+copy libraries
+cp sky130_fd_sc_hd_* /home/niorcasitas07/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/src
+
+modificate config.tcl
+
+set ::env(LIB_SYNTH) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__typical.lib"
+set ::env(LIB_FASTEST) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__fast.lib"
+set ::env(LIB_SLOWEST) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__slow.lib"
+set ::env(LIB_TYPICAL) "$::env(OPENLANE_ROOT)/designs/picorv32a/scr/sly130_fd_sc_hd__typical.lib"
+
+set ::env(EXTRA_LEFS) [glob $::env(OPENLANE_ROOT)/designs/$::env(DESIGN_NAME)/src/*.lef]
+
+//////////////////////////
+running openlane
+
+set lefs [glob $::env(DESIGN_DIR)/src/*.lef]
+add_lefs -src $lefs
+
+run_synthesis
+
+slack violated/ timing report
+
+////////////////////
+cts
+	-same load at same level
+	-same buufer at same level
+//////////////////
+before: Chip area for module '\picorv32a': 147712.918400
+-23.89   slack (VIOLATED)
+tns -711.59
+wns -23.89
+
+set ::env(SYNTH_STRATEGY) "DELAY 1" (improve delay more area)
+set ::env(SYNTH_SIZING) 1
+
+after: Chip area for module '\picorv32a': 209181.872000
+9.78   slack (MET)
+tns 0
+wns 0
+
+after after:Chip area for module '\picorv32a': 216591.478400
+
+
+set ::env(SYNTH_MAX_FANOUT) 4
+
+
+run_floorplan
+
+run_placement
+
+open magic
+magic -T /home/niorcasitas07/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.placement.def &
+
+
+////////////////////////////
+timing analysis
+delay time < T - setup - jitterclock
+
+
+/////////////
+slack
+replace_cell _42119_ sky130_fd_sc_hd__mux2_4
+report_checks -fields{net cap slew input_pins} -digits 4
+
+
+////////////////////
+clock tree analysis
+
+long paths / buffers
+shield (for glitches)
+
+//////////////////////
+slack >-1
+run_floorplan
+
+
+//////
+run_cts
+
+openroad
+read lef
+read def
+
+read_lef /openLANE_flow/designs/picorv32a/runs/final/tmp/merged.lef
+read_def /openLANE_flow/designs/picorv32a/runs/final/results/cts/picorv32a.cts.def
+write_db pico_cts.db
+read_db pico_cts.db
+% read_verilog /openLANE_flow/designs/picorv32a/runs/final/results/synthesis/picorv32a.synthesis_cts.v      
+% read_liberty $::env(LIB_SYNTH_COMPLETE)
+read_sdc /openLANE_flow/designs/picorv32a/src/my_base.sdc
+set_propagated_clock [all_clocks]
+report_checks -path_delay min_max -format full_clock_expanded -digits 4
+link_design picorv32a
+
+set ::env(CURRENT_DEF) /openLANE_flow/designs/picorv32a/runs/final/results/placement/picorv32a.placement.def
+
