@@ -3,13 +3,32 @@ Here there are all the material and labs made in the SKY130 PD Workshop.
 
 ### **Table of Contents**
 
-- [Day 1: Inception of open-source EDA, OpenLANE and SKY130 PDK](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-1-inception-of-open-source-eda-openlane-and-sky130-pdk)
+  - [Day 1: Inception of open-source EDA, OpenLANE and SKY130 PDK](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-1-inception-of-open-source-eda-openlane-and-sky130-pdk)
+    - [Getting to know OpenLane directory](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#getting-to-know-openlane-directory)
+    - [Starting openlane](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#starting-openlane)   
+    - [Preparing for synthesis](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#preparing-for-synthesis)
+    - [Runing synthesis](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#runing-synthesis)
 
-- [Day 2: Good floorplan vs bad floorplan and introduction to library cells](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-2-good-floorplan-vs-bad-floorplan-and-introduction-to-library-cells)
+  - [Day 2: Good floorplan vs bad floorplan and introduction to library cells](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-2-good-floorplan-vs-bad-floorplan-and-introduction-to-library-cells)
+      - [Floor planing](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#floor-planing)
+      - [FIles used for floorplan](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#files-used-for-floorplan)
+      - [Running floorplan](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#running-floorplan)
+      - [Running placement](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#running-placement)
+      - [Library cells](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#library-cells)
+      - [Time characterization](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#time-characterization)
 
-- [Day 3: Design library cell using Magic Layout and ngspice characterization](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-3-design-library-cell-using-magic-layout-and-ngspice-characterization)
+  - [Day 3: Design library cell using Magic Layout and ngspice characterization](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-3-design-library-cell-using-magic-layout-and-ngspice-characterization)
+      - [CMOS inverter standard cell](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#cmos-inverter-standard-cell)
+      - [Extracting spcie netlist from layout](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#extracting-spcie-netlist-from-layout)
+      - [Simulation using ngspice](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#simulation-using-ngspice)
 
-- [Day 4: Pre-layout timing analysis and importance of good clock tree](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-4-pre-layout-timing-analysis-and-importance-of-good-clock-tree)
+  - [Day 4: Pre-layout timing analysis and importance of good clock tree](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-4-pre-layout-timing-analysis-and-importance-of-good-clock-tree)
+      - [Extracting -lef file](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#extracting--lef-file)
+      - [Adding our cell to the flow](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#adding-our-cell-to-the-flow)
+      - [Timing analysis](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#timing-analysis)
+        - [OpenSTA](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#opensta)
+        - [Openroad](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#openroad)
+      - [Clock Tree Synthesis CTS](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#clock-tree-synthesis-cts)
 
 - [Day 5: Final steps for RTL2GDS using tritonRoute and openSTA](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-5-final-steps-for-rtl2gds-using-tritonroute-and-opensta)
 
@@ -493,7 +512,48 @@ This step must be run after synthesis, floorplan and placement steps.
 
 # Day 5: Final steps for RTL2GDS using tritonRoute and openSTA
 
+## Generation of power distribution nedtwork
 
+In this step all the power network is design and generated. This include the straps and rails where standard cells will be suplied, and also the power ring for the preplaced cells in order not to find any strap or rail on the preplaced cell.
 
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day5/stripes_rails.png)
 
+For running this step we have to execute the command below.
 
+> run_gen_pdn
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day5/pnd_generated_successful.png)
+
+When the generation is completed, we can see the dimentions and layers for the straps and rails.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day5/Stdcells_rails.png)
+
+## Routing
+
+This is the last step of the flow . It is executed in two stages: the first one the fast root tool make a global rouitng ensuring all the connections are done and generates a route guide. The second one takes the route guide generated by the first stage, and start optimizing and solving all the DRC problems that can be generated, iterating many times until there are no DRC errors.
+
+For running this step, execute the next comamnd.
+
+> run_routing
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day5/routibg_completed.png)
+
+We can see that at lower number of iterations there are more DRC erros. And at the end there are no DRC erros.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day5/routing_9_3_drc.png)
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day5/routing_57_no_drc.png)
+
+## Spef file
+
+Finally, the result of the routing stage generates a .spef file that contains the parasitics extracted from the routed layout.
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day5/results_spef_file.png)
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/Day5/spef_file.png)
+
+# Layout Complete
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/layout_complete_zoom.png)
+
+![](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/layout_complete.png)
