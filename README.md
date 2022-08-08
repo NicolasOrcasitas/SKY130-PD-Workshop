@@ -11,11 +11,11 @@ Here there are all the material and labs made in the SKY130 PD Workshop.
 
   - [Day 2: Good floorplan vs bad floorplan and introduction to library cells](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-2-good-floorplan-vs-bad-floorplan-and-introduction-to-library-cells)
       - [Floor planing](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#floor-planing)
-      - [FIles used for floorplan](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#files-used-for-floorplan)
-      - [Running floorplan](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#running-floorplan)
+        - [FIles used for floorplan](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#files-used-for-floorplan)
+        - [Running floorplan](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#running-floorplan)
       - [Running placement](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#running-placement)
       - [Library cells](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#library-cells)
-      - [Time characterization](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#time-characterization)
+        - [Time characterization](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#time-characterization)
 
   - [Day 3: Design library cell using Magic Layout and ngspice characterization](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-3-design-library-cell-using-magic-layout-and-ngspice-characterization)
       - [CMOS inverter standard cell](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#cmos-inverter-standard-cell)
@@ -30,7 +30,12 @@ Here there are all the material and labs made in the SKY130 PD Workshop.
         - [Openroad](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#openroad)
       - [Clock Tree Synthesis CTS](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#clock-tree-synthesis-cts)
 
-- [Day 5: Final steps for RTL2GDS using tritonRoute and openSTA](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-5-final-steps-for-rtl2gds-using-tritonroute-and-opensta)
+  - [Day 5: Final steps for RTL2GDS using tritonRoute and openSTA](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop/blob/main/README.md#day-5-final-steps-for-rtl2gds-using-tritonroute-and-opensta)
+      - [Generation of power distribution nedtwork](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#generation-of-power-distribution-nedtwork)
+      - [Routing](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#routing)
+      - [Spef file](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#spef-file)
+      
+  - [Layout Complete](https://github.com/NicolasOrcasitas/SKY130-PD-Workshop#layout-complete)
 
 # Day 1: Inception of open-source EDA, OpenLANE and SKY130 PDK
 
@@ -512,7 +517,7 @@ This step must be run after synthesis, floorplan and placement steps.
 
 # Day 5: Final steps for RTL2GDS using tritonRoute and openSTA
 
-## Generation of power distribution nedtwork
+## Generation of power distribution network
 
 In this step all the power network is design and generated. This include the straps and rails where standard cells will be suplied, and also the power ring for the preplaced cells in order not to find any strap or rail on the preplaced cell.
 
